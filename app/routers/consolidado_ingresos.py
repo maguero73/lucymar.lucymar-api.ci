@@ -61,7 +61,7 @@ async def obtener_consolidado(filtros: FiltroConsolidado, db=Depends(get_db)):
             ResultadosSalida(
                 titular=db_lm_titular.get_descripcion_titular(db, i.cod_titular),
                 cod_ingreso=i.cod_ingreso,
-                codigo_moneda=i.codigo_moneda,
+                codigo_moneda=i.cod_moneda,
                 monto=i.monto,
                 fecha=i.fecha.date() if isinstance(i.fecha, datetime) else i.fecha # Manejo seguro de fechas
             )
@@ -71,7 +71,7 @@ async def obtener_consolidado(filtros: FiltroConsolidado, db=Depends(get_db)):
         return resultados
 
     except Exception as e:
-        print("🔥 ERROR en consolidado_gastos:", e)
+        print("🔥 ERROR en consolidado_ingresos:", e)
         import traceback
         traceback.print_exc()
         raise HTTPException(status_code=500, detail=str(e))

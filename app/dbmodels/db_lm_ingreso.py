@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, Numeric, DateTime, String, Float
+from sqlalchemy import Column, Integer, Numeric, DateTime, String, Float, extract, func
 from app.core.database import DBBase
 from datetime import datetime, timedelta, timezone, date
 from sqlalchemy.orm import Session
@@ -17,6 +17,7 @@ class DBLMIngreso(DBBase):
     fecha = Column(DateTime)
     cod_moneda =Column(String(3))
     tipo_cambio =Column(Float)
+    detalle = Column(String(255), nullable=True)
     fecha_creacion = Column(
     DateTime,
     nullable=False,
@@ -80,9 +81,37 @@ def get_ingresos_filtrados(
         query = query.filter(DBLMIngreso.cod_titular.in_(cod_titular))
     
     if cod_ingreso:
-        query = query.filter(DBLMIngreso.cod_gasto.in_(cod_ingreso))
+        query = query.filter(DBLMIngreso.cod_ingreso.in_(cod_ingreso))
 
     if codigo_moneda:
-        query = query.filter(DBLMIngreso.codigo_moneda == codigo_moneda)
+        query = query.filter(DBLMIngreso.cod_moneda == codigo_moneda)
 
     return query.all()
+
+#-----------------------------------------------------------------------------
+def get_ingresos_anuales(
+    session: Session,
+    cod_titular: int = 0,
+    cod_ingreso: int = 0
+):
+    query = session.query(
+        extract('year', DBLMIngreso.fecha).label('anio'),
+        func.sum(DBLMIngreso.monto).label('total')
+    )
+
+    if cod_titular != 0:
+        query = query.filter(
+            DBLMIngreso.cod_titular == cod_titular
+        )
+
+    if cod_ingreso != 0:
+        query = query.filter(
+            DBLMIngreso.cod_ingreso == cod_ingreso
+        )
+
+    return (
+        query
+        .group_by(extract('year', DBLMIngreso.fecha))
+        .order_by(extract('year', DBLMIngreso.fecha))
+        .all()
+    )

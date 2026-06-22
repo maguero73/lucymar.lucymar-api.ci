@@ -32,6 +32,7 @@ class IngresoIn(BaseModel):
     fecha: datetime
     cod_moneda: str
     tipo_cambio: float
+    detalle: Optional[str] = None
     fecha_creacion: Optional[datetime] = None  # <- Ahora es opcional
 
 #------------------------------------------------------------------------------------
@@ -59,6 +60,7 @@ async def crear_ingreso(ingreso: IngresoIn, db: Session = Depends(get_db)):
             fecha=ingreso.fecha,
             cod_moneda=ingreso.cod_moneda,
             tipo_cambio=ingreso.tipo_cambio,
+            detalle=ingreso.detalle,
             fecha_creacion=ingreso.fecha_creacion,
         )
         print("antes del add")

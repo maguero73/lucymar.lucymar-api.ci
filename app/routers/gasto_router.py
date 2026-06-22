@@ -27,6 +27,7 @@ class GastoIn(BaseModel):
     fecha: datetime
     codigo_moneda: Optional[str] = None
     tipo_cambio: float
+    detalle: Optional[str] = None
 
 # --- MODELO DE SALIDA
 
@@ -38,6 +39,7 @@ class GastoOut(BaseModel):
     fecha: datetime
     codigo_moneda: Optional[str] = None
     tipo_cambio: float
+    detalle: Optional[str] = None
 
     class Config:
         from_attributes = True
@@ -79,6 +81,7 @@ async def crear_gasto(gasto: GastoIn, db: Session = Depends(get_db)):
             fecha=gasto.fecha,
             codigo_moneda=gasto.codigo_moneda,
             tipo_cambio=gasto.tipo_cambio,
+            detalle=gasto.detalle,
             fecha_creacion=fecha_creacion,
         )
 

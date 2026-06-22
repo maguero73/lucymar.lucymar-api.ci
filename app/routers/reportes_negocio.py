@@ -17,7 +17,7 @@ def get_db():
 # --- ENDPOINTS DE GASTOS ---
 
 #--------------------------------------------------------------------------------
-@router.get("/api/reportes/gastos-altos")
+@router.get("/api/reportes/gastos-altos", tags=["Reportes", "Gastos"])
 def reporte_gastos_altos(monto_minimo: float, db:Session=Depends(get_db)):
     """
     Devuelve gastos que superan el monto especificado.
@@ -27,7 +27,7 @@ def reporte_gastos_altos(monto_minimo: float, db:Session=Depends(get_db)):
 
 #-----------------------------------------------------------------------------------------
 
-@router.get("/api/reportes/ultimo-gasto/{cod_titular}")
+@router.get("/api/reportes/ultimo-gasto/{cod_titular}", tags=["Reportes", "Gastos"])
 def reporte_ultimo_gasto(cod_titular: int, db:Session=Depends(get_db)):
     """
     Devuelve el último gasto de un titular, incluyendo la descripción del tipo de gasto.
@@ -53,7 +53,7 @@ def reporte_ultimo_gasto(cod_titular: int, db:Session=Depends(get_db)):
 # --- ENDPOINTS DE INGRESOS ---
 
 
-@router.get("/api/reportes/ingresos-mensuales")
+@router.get("/api/reportes/ingresos-mensuales", tags=["Reportes", "Ingresos"])
 def reporte_ingresos_mensuales(anio: int, mes: int, db: Session = Depends(get_db)):
     """
     Devuelve los ingresos de un mes específico.
@@ -61,7 +61,7 @@ def reporte_ingresos_mensuales(anio: int, mes: int, db: Session = Depends(get_db
     return db_lm_ingreso.get_ingresos_del_mes(db, anio, mes)
 
 
-@router.get("/api/reportes/gastos-anuales")
+@router.get("/api/reportes/gastos-anuales", tags=["Reportes", "Gastos"])
 def reporte_gastos_anuales(
     cod_titular: int = 0,
     cod_gasto: int = 0,
@@ -88,12 +88,40 @@ def reporte_gastos_anuales(
         print("🔥 ERROR en reporte_gastos_anuales:", e)
         raise HTTPException(status_code=500, detail=str(e))
 
+@router.get("/api/reportes/ingresos-anuales", tags=["Reportes", "Ingresos"])
+def reporte_ingresos_anuales(
+    cod_titular: int = 0,
+    cod_ingreso: int = 0,
+    db: Session = Depends(get_db)
+):
+    """
+    Devuelve el total de ingresos anuales, opcionalmente filtrado por titular o ingreso.
+    """
+    try:
+        resultados = db_lm_ingreso.get_ingresos_anuales(
+            session=db,
+            cod_titular=cod_titular,
+            cod_ingreso=cod_ingreso
+        )
+
+        return [
+            {
+                "anio": int(r.anio),
+                "total": float(r.total)
+            }
+            for r in resultados
+        ]
+
+    except Exception as e:
+        print("🔥 ERROR en reporte_ingresos_anuales:", e)
+        raise HTTPException(status_code=500, detail=str(e))
+
 #----------------------------------------------------
 
 #OBTENGO LOS AÑOS DE LA BD
 
 
-@router.get("/api/reportes/anios")
+@router.get("/api/reportes/anios", tags=["Reportes"])
 def reporte_anios(db: Session = Depends(get_db)):
     try:
 

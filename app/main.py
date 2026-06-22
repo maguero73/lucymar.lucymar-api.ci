@@ -44,13 +44,20 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/login")
 
 #----------------------------Routers----------------------------------------
 
-app.include_router(titulares_router.router, tags=["Titulares"]) #dependencies=[Depends(oauth2_scheme)])
-app.include_router(gasto_router.router, tags=["Gastos"]) #dependencies=[Depends(bearer_scheme)])
-app.include_router(tipos_gasto_router.router, tags=["Gastos"]) #dependencies=[Depends(bearer_scheme)])
+# --- Titulares ---
+app.include_router(titulares_router.router, tags=["Titulares"])#dependencies=[Depends(bearer_scheme)])
+
+# --- Gastos ---
+app.include_router(gasto_router.router, tags=["Gastos"])#dependencies=[Depends(bearer_scheme)])
+app.include_router(tipos_gasto_router.router, tags=["Gastos"])#dependencies=[Depends(bearer_scheme)])
+app.include_router(consolidado_gastos.router, tags=["Gastos"])#dependencies=[Depends(bearer_scheme)])
+
+# --- Ingresos ---
 app.include_router(ingreso_router.router, tags=["Ingresos"])#dependencies=[Depends(bearer_scheme)])
 app.include_router(tipos_ingreso_router.router, tags=["Ingresos"])#dependencies=[Depends(bearer_scheme)])
-app.include_router(consolidado_gastos.router, tags=["Gastos"])#dependencies=[Depends(bearer_scheme)])
 app.include_router(consolidado_ingresos.router, tags=["Ingresos"])#dependencies=[Depends(bearer_scheme)])
+
+# --- Reportes ---
 app.include_router(reportes_negocio.router, tags=["Reportes"])#dependencies=[Depends(bearer_scheme)])
 
 
