@@ -16,7 +16,7 @@ def get_titular(session: Session, id: int):
 
 #------------------------------------------------------------------------
 
-def get_titulares(session:Session, offset:int = 0, limit: int = 1000):
+def get_titulares(session:Session, offset:int = 0, limit: int = 100):
     query = session.query(DBLMTitular).offset(offset).limit(limit).all()
     return query
 

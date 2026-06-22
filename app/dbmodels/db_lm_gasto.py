@@ -17,11 +17,7 @@ class DBLMGasto(DBBase):
     fecha = Column(DateTime)
     codigo_moneda =Column(String(3))
     tipo_cambio =Column(Float)
-    fecha_creacion = Column(
-    DateTime,
-    nullable=False,
-    default=lambda: datetime.now(ARG_TZ)
-    )
+    fecha_creacion = Column(DateTime,nullable=False,default=lambda: datetime.now(ARG_TZ))
 
 #-------------------------------------------------------------------
 
