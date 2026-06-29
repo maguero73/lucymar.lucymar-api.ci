@@ -10,7 +10,7 @@ from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 #from app.endpoints import titulares
 #from app.endpoints import tipo_gasto
-from app.routers import gasto_router, ingreso_router, auth_router, consolidado_gastos, consolidado_ingresos, titulares_router, tipos_gasto_router, tipos_ingreso_router, reportes_negocio
+from app.routers import gasto_router, ingreso_router, auth_router, consolidado_gastos, consolidado_ingresos, titulares_router, tipos_gasto_router, tipos_ingreso_router, reportes_negocio, version_router 
 #from app.endpoints import tipo_ingreso
 from app.middlewares.audit_middleware_auth import JWTMiddleware
 
@@ -31,15 +31,6 @@ app= FastAPI(title="Backend-FastAPI")
 
 bearer_scheme = HTTPBearer()
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/login")
-
-#----------------------------Middleware---------------------------------------------#
-
-#app.add_middleware(JWTMiddleware, database_service='desa@fiscodb')
-
-#---------------------------Services--------------------------------------------
-# Conexiones a BD
-#app.add_services_from_path(database_service.Database,'conf/ds/')
-
 
 
 #----------------------------Routers----------------------------------------
@@ -67,7 +58,8 @@ app.include_router(reportes_negocio.router, tags=["Reportes"])#dependencies=[Dep
 app.include_router(auth_router.router, tags=["Auth"])#dependencies=[Depends(bearer_scheme)])
 
 
-
+# ----------------------- Version ---------------------------------------------------
+app.include_router(version_router.router, tags=["Version"])#dependencies=[Depends(bearer_scheme)])
 
 # ------------------------- Middlewares --------------------------------------------------------
 
